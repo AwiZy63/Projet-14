@@ -19,6 +19,11 @@ code {
   justify-content: center;
 }
 
+.title > img {
+  width: 75%;
+  max-width: 300px;
+}
+
 .container {
   display: flex;
   flex-direction: column;

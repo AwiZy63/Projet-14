@@ -1,15 +1,26 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import DataTable from 'react-data-table-component';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { useMemo } from 'react';
+import { useState } from 'react';
+
+const FilterComponent = ({ filterText, onFilter, onClear }) => {
+    return (
+        <>
+            <input
+                id="search"
+                type='text'
+                placeholder="Filter By Name"
+                aria-label="Search Input"
+                value={filterText}
+                onChange={onFilter} />
+            <button type="button" onClick={onClear}>X</button>
+        </>
+    )
+}
 
 function Tablepage({ employees }) {
-    useEffect(() => {
-        setInterval(() => {
-            console.log(employees);
-        }, 2500);
-    }, [employees])
-
 
     const columns = [
         {
@@ -68,49 +79,41 @@ function Tablepage({ employees }) {
         },
     ];
 
-    const data = [
-        // {
-        //     id: 1,
-        //     firstName: 'John',
-        //     lastName: 'Doe',
-        //     startDate: new Date(Date.now()).toLocaleDateString(),
-        //     department: 'Business',
-        //     dateOfBirth: new Date(Date.now()).toLocaleDateString(),
-        //     street: 'Road Street',
-        //     city: 'Atlanta',
-        //     state: 'East',
-        //     zipCode: '54123'
-        // },
-        // {
-        //     id: 2,
-        //     firstName: 'Robert',
-        //     lastName: 'Zeet',
-        //     startDate: new Date(Date.now()).toLocaleDateString(),
-        //     department: 'Business',
-        //     dateOfBirth: new Date(Date.now()).toLocaleDateString(),
-        //     street: 'Road Street',
-        //     city: 'Atlanta',
-        //     state: 'East',
-        //     zipCode: '54123'
-        // },
-        // {
-        //     id: 3,
-        //     firstName: 'Alvin',
-        //     lastName: 'Smith',
-        //     startDate: new Date(Date.now()).toLocaleDateString(),
-        //     department: 'Business',
-        //     dateOfBirth: new Date(Date.now()).toLocaleDateString(),
-        //     street: 'Road Street',
-        //     city: 'Atlanta',
-        //     state: 'East',
-        //     zipCode: '54123'
-        // },
-    ]
+
+    const [filterText, setFilterText] = useState('');
+    const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+    const filteredItems = employees.filter((item) => 
+    (item.firstName && item.lastName) && (item.firstName.toLowerCase().includes(filterText.toLowerCase()) || item.lastName.toLowerCase().includes(filterText.toLowerCase())),
+	);
+
+    const subHeaderComponentMemo = useMemo(() => {
+        const handleClear = () => {
+            if (filterText) {
+                setResetPaginationToggle(!resetPaginationToggle);
+                setFilterText('');
+            }
+        };
+
+        return (
+            <FilterComponent onFilter={e => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} />
+        );
+    }, [filterText, resetPaginationToggle]);
 
     return (
         <div className="employees">
             <Link className='employees-link' to={'/'}>Return to home page</Link>
-            <DataTable style={{ margin: '16px' }} title="Current Employees" columns={columns} data={employees} pagination />
+            <DataTable
+                style={{ margin: '16px' }}
+                title="Current Employees"
+                columns={columns}
+                data={filteredItems}
+                pagination
+                paginationResetDefaultPage={resetPaginationToggle}
+                subHeader
+                subHeaderComponent={subHeaderComponentMemo}
+                selectableRows
+                persistTableHead
+            />
         </div>
     )
 }

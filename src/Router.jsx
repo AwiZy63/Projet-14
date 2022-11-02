@@ -2,12 +2,13 @@ import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Homepage from './pages/Homepage';
 import Tablepage from './pages/Tablepage';
+import hrNetLogo from './assets/hrnetlogo.png';
 
 export default function Router() {
   return (
     <BrowserRouter>
-      <div class="title">
-        <h1>HRnet</h1>
+      <div className="title">
+        <img src={hrNetLogo} alt='HRNet' />
       </div>
       <Routes>
         <Route path='/' element={<Homepage />} />

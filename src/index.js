@@ -5,6 +5,8 @@ import Router from './Router';
 
 import { Provider } from 'react-redux';
 import store from './store/index.store';
+// TODO
+// Rapports
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<Provider store={store}>

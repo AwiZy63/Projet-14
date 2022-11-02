@@ -9,7 +9,6 @@ export default function Homepage() {
                 <Link to={'/employees'}>View Current Employees</Link>
                 <EmployeeForm />
             </div>
-            <div id="confirmation" className="modal">Employee Created!</div>
         </>
     )
 }

@@ -24,7 +24,11 @@ label {
 }
 .employee-form-label {
 }
+.react-date-picker__wrapper {
+  border: none !important;
+}
 .employee-form-input {
+  width: 175px;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;

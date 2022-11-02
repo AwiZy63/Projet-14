@@ -2,15 +2,12 @@ import React, { useState } from 'react';
 import './EmployeeForm.style.css';
 import { states } from './States';
 import Select from 'react-select';
-import DatePicker, { registerLocale } from "react-datepicker";
-import fr from 'date-fns/locale/fr';
-
-import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from 'react-date-picker';
+import { Modal } from 'bf-component-modal';
 import { connect } from 'react-redux';
 import { defineEmployeesAction } from '../../store/employees/employees.actions'
 
 function EmployeeForm({ defineEmployee }) {
-    registerLocale('fr', fr)
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [dateOfBirth, setDateOfBirth] = useState(new Date());
@@ -20,14 +17,26 @@ function EmployeeForm({ defineEmployee }) {
     const [state, setState] = useState("");
     const [zipCode, setZipCode] = useState("");
     const [department, setDepartment] = useState("");
-
-    // console.log(states)
+    const [showModal, setShowModal] = useState(false);
+    const [showErrorModal, setShowErrorModal] = useState(false);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         if (firstName && lastName && (dateOfBirth && (dateOfBirth.toLocaleDateString() !== new Date().toLocaleDateString())) && (startDate && (startDate.toLocaleDateString() !== new Date().toLocaleDateString())) && street && city && state && zipCode && department) {
-            console.log({
+            // console.log({
+            //     firstName: firstName,
+            //     lastName: lastName,
+            //     dateOfBirth: dateOfBirth.toLocaleDateString(),
+            //     startDate: startDate.toLocaleDateString(),
+            //     street: street,
+            //     city: city,
+            //     state: state,
+            //     zipCode: zipCode,
+            //     department: department
+            // });
+
+            let newEmployee = await defineEmployee({
                 firstName: firstName,
                 lastName: lastName,
                 dateOfBirth: dateOfBirth.toLocaleDateString(),
@@ -39,19 +48,14 @@ function EmployeeForm({ defineEmployee }) {
                 department: department
             });
 
-            await defineEmployee({
-                firstName: firstName,
-                lastName: lastName,
-                dateOfBirth: dateOfBirth.toLocaleDateString(),
-                startDate: startDate.toLocaleDateString(),
-                street: street,
-                city: city,
-                state: state,
-                zipCode: zipCode,
-                department: department
-            });
+            if (newEmployee) {
+                setShowModal(true);
+                return newEmployee = undefined;
+            }
+
         } else {
-            console.debug('Veuillez replir tous les champs requis.');
+            // console.debug('Veuillez replir tous les champs requis.');
+            setShowErrorModal(true);
         }
     }
 
@@ -67,18 +71,18 @@ function EmployeeForm({ defineEmployee }) {
 
                 <label className='employee-form-label' htmlFor="date-of-birth">Date of Birth</label>
                 <DatePicker className='employee-form-input'
-                    selected={dateOfBirth}
+                    value={dateOfBirth}
                     onChange={(date) => setDateOfBirth(date)}
-                    dateFormat="P"
-                    locale="fr"
+                    clearIcon={null}
+                    calendarIcon={null}
                 />
 
                 <label className='employee-form-label' htmlFor="start-date">Start Date</label>
                 <DatePicker className='employee-form-input'
-                    selected={startDate}
+                    value={startDate}
                     onChange={(date) => setStartDate(date)}
-                    dateFormat="P"
-                    locale="fr"
+                    clearIcon={null}
+                    calendarIcon={null}
                 />
 
                 <fieldset className="address">
@@ -123,6 +127,8 @@ function EmployeeForm({ defineEmployee }) {
                 <button className='employee-form-button' type='submit'>Save</button>
             </form>
 
+            <Modal title={"Success"} description={"Employee successfully added!"} show={showModal} onClose={() => setShowModal(false)} />
+            <Modal title={"Error"} description={"Please fill all inputs correctly."} show={showErrorModal} onClose={() => setShowErrorModal(false)} />
         </>
     )
 }
