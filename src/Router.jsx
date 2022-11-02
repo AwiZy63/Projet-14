@@ -1,8 +1,7 @@
 import React from 'react'
-import { lazy } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-const Homepage = lazy(() => import('./pages/Homepage'));
-const Tablepage = lazy(() => import('./pages/Tablepage'));
+import Homepage from './pages/Homepage';
+import Tablepage from './pages/Tablepage';
 
 export default function Router() {
   return (
