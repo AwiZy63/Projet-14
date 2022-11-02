@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './EmployeeForm.style.css';
 import { states } from './States';
 import Select from 'react-select';
 import DatePicker from 'react-date-picker';

@@ -1,14 +1,14 @@
 import React from 'react'
+import { lazy } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Homepage from './pages/Homepage';
-import Tablepage from './pages/Tablepage';
-import hrNetLogo from './assets/hrnetlogo.png';
+const Homepage = lazy(() => import('./pages/Homepage'));
+const Tablepage = lazy(() => import('./pages/Tablepage'));
 
 export default function Router() {
   return (
     <BrowserRouter>
       <div className="title">
-        <img src={hrNetLogo} alt='HRNet' />
+        <img width={'50%'} height={'50%'} src={process.env.PUBLIC_URL + "/assets/hrnetlogo.webp"} srcSet={process.env.PUBLIC_URL + "/assets/hrnetlogo.webp"} alt='HRNet' />
       </div>
       <Routes>
         <Route path='/' element={<Homepage />} />
